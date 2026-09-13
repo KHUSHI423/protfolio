@@ -1,197 +1,651 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khushi Tirkey — Software Engineer | KHUSHI.OS</title>
+<meta name="description" content="Khushi Tirkey — software engineering student portfolio, presented as a retro desktop OS. About, skills, experience, projects, resume and contact.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐱</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#39ff6a; --amber:#ffb347; --cyan:#5ee7ff; --pink:#ff7eb6;
+  --win-bg:#1b2440; --win-head:#2e3a5e; --taskbar:#10162e; --desk:#0d1330;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+html,body{height:100%;overflow:hidden;background:#05070f;font-family:'VT323',monospace;color:#dfe6ff}
+button{font-family:inherit;cursor:pointer}
+.hidden{display:none!important}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-    <meta charset="UTF-8">
+/* focus visibility for keyboard users */
+a:focus-visible,button:focus-visible,.icon:focus-visible,input:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--cyan);outline-offset:2px;box-shadow:0 0 0 4px rgba(94,231,255,.25)}
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
 
-    <title>Krushi | Portfolio</title>
+/* ============ CRT OVERLAY ============ */
+#crt{position:fixed;inset:0;overflow:hidden}
+#crt::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:9999;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px);}
+#crt::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:9998;
+  background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%);
+  animation:flick 4s infinite}
+@keyframes flick{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.85}94%{opacity:1}}
 
+.px{font-family:'Press Start 2P',monospace}
+.glow{text-shadow:0 0 6px currentColor,0 0 18px currentColor}
 
-    <!-- Google Font -->
+/* ============ BOOT SCREEN ============ */
+#boot{position:absolute;inset:0;background:#04060d;display:flex;flex-direction:column;
+  justify-content:center;padding:8vw;font-size:clamp(16px,2.2vw,24px);color:var(--green);z-index:60}
+#boot .px{color:#8fa3ff;font-size:clamp(10px,1.4vw,14px);margin-bottom:24px;letter-spacing:2px}
+#bootLines div{opacity:0;animation:lineIn .05s forwards;margin:4px 0}
+@keyframes lineIn{to{opacity:1}}
+#barWrap{width:min(420px,70vw);height:18px;border:2px solid var(--green);margin-top:26px;padding:2px}
+#bar{height:100%;width:0;background:var(--green);box-shadow:0 0 10px var(--green)}
+#bootHint{margin-top:26px;color:var(--amber);opacity:0;animation:blink 1s steps(2) infinite;background:none;border:0;font:inherit;padding:0}
 
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
+/* ============ TERMINAL SCREEN ============ */
+#terminal{position:absolute;inset:0;background:linear-gradient(#0a0f24,#05070f);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:50;padding:20px}
+#termTop{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;
+  padding:16px 22px;font-size:clamp(14px,1.8vw,20px);color:#8fa3ff}
+#monitor{position:relative;width:min(760px,94vw);background:#c9c2b4;border-radius:18px;
+  padding:26px 26px 60px;box-shadow:0 0 0 6px #a89f8d,0 30px 80px rgba(0,0,0,.8)}
+#monitor::after{content:"KHUSHI.OS";position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+  font-family:'Press Start 2P';font-size:10px;color:#5c554a;letter-spacing:3px}
+#cat{position:absolute;top:-46px;right:8%;font-size:44px;transform:scaleX(-1);animation:catSleep 3s ease-in-out infinite}
+#cat .zzz{position:absolute;top:-14px;right:-8px;font-size:16px;color:#8fa3ff;animation:zzz 2.4s infinite}
+#cat .zzz:nth-child(2){animation-delay:.8s;top:-26px;right:-20px;font-size:12px}
+@keyframes catSleep{0%,100%{transform:scaleX(-1) translateY(0)}50%{transform:scaleX(-1) translateY(2px)}}
+@keyframes zzz{0%{opacity:0;transform:translateY(6px)}30%{opacity:1}100%{opacity:0;transform:translateY(-16px)}}
+#screen{background:#03140a;border-radius:10px;min-height:min(420px,52vh);padding:28px;
+  box-shadow:inset 0 0 40px rgba(0,0,0,.9),inset 0 0 6px #0f3;border:3px solid #2a2620;position:relative}
+#screen .px{font-size:clamp(8px,1vw,11px);color:var(--green);opacity:.7}
+#termPath{color:var(--green);font-size:clamp(16px,2vw,22px);opacity:.9;margin-bottom:14px}
+#typeArea{color:var(--green);font-size:clamp(20px,3.2vw,34px);line-height:1.25;text-shadow:0 0 8px var(--green)}
+#typeArea .hi{font-size:.55em;opacity:.85}
+#typeArea .name{font-family:'Press Start 2P';font-size:.85em;line-height:1.6;margin:8px 0;color:#b6ffce;display:block}
+#typeArea .role{font-size:.6em;letter-spacing:4px;color:#9fe8ff;text-shadow:0 0 8px #9fe8ff}
+.cursor{display:inline-block;width:.55em;height:1em;background:var(--green);vertical-align:-2px;animation:blink .9s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+#enterBtn{margin-top:30px;background:transparent;border:2px solid var(--cyan);color:var(--cyan);
+  font-family:'Press Start 2P';font-size:clamp(9px,1.2vw,12px);padding:14px 22px;letter-spacing:1px;
+  text-shadow:0 0 8px var(--cyan);box-shadow:0 0 12px rgba(94,231,255,.35),inset 0 0 12px rgba(94,231,255,.12);
+  transition:.15s}
+#enterBtn:hover{background:rgba(94,231,255,.12);transform:translateY(-2px)}
+#termHint{position:absolute;bottom:26px;left:0;right:0;text-align:center;color:#6f7fb8;
+  font-size:clamp(14px,1.8vw,20px);letter-spacing:3px;animation:blink 1.6s steps(2) infinite;
+  background:none;border:0;font-family:'VT323',monospace;width:100%}
 
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
+/* ============ DESKTOP ============ */
+#desktop{position:absolute;inset:0;background:linear-gradient(#2b3a8f 0%,#7a5fb8 42%,#e98a6d 72%,#f7c46c 100%);z-index:40}
+#sun{position:absolute;left:12%;top:14%;width:110px;height:110px;border-radius:50%;
+  background:radial-gradient(circle,#fff3c4,#ffd166 60%,transparent 72%);filter:blur(1px);opacity:.95}
+#skyline{position:absolute;bottom:96px;left:0;right:0;display:flex;align-items:flex-end;gap:6px;padding:0 4vw;opacity:.9}
+#skyline .bld{flex:1;background:linear-gradient(#1a2148,#0d1230);position:relative;min-width:14px}
+#skyline .bld::after{content:"";position:absolute;inset:8px 6px;
+  background:repeating-linear-gradient(0deg,rgba(255,214,120,.85) 0 3px,transparent 3px 10px),
+             repeating-linear-gradient(90deg,transparent 0 5px,rgba(255,214,120,0) 5px 10px);opacity:.5}
+#deskCat{position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:40px;animation:catSleep 3s ease-in-out infinite;z-index:5;filter:drop-shadow(0 4px 6px rgba(0,0,0,.4))}
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+#icons{position:absolute;top:70px;left:26px;display:flex;flex-direction:column;gap:18px;z-index:6}
+.icon{display:flex;flex-direction:column;align-items:center;gap:6px;width:92px;padding:10px 4px;
+  border-radius:8px;color:#fff;cursor:pointer;user-select:none;transition:.15s;text-align:center}
+.icon:hover,.icon.sel{background:rgba(255,255,255,.18);outline:1px solid rgba(255,255,255,.4)}
+.icon .emo{font-size:34px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))}
+.icon .lbl{font-size:17px;text-shadow:0 1px 3px rgba(0,0,0,.7)}
 
+/* ---- windows ---- */
+.window{position:absolute;width:min(620px,92vw);background:var(--win-bg);border:3px solid #0a0e22;
+  box-shadow:8px 8px 0 rgba(0,0,0,.45),0 0 0 2px #4a5a8c;border-radius:6px;z-index:10;overflow:hidden}
+.win-head{display:flex;align-items:center;gap:8px;background:linear-gradient(#3d4c7d,#2e3a5e);
+  padding:7px 10px;cursor:grab;user-select:none;border-bottom:3px solid #0a0e22;touch-action:none}
+.win-head:active{cursor:grabbing}
+.win-dot{width:14px;height:14px;border-radius:50%;border:2px solid rgba(0,0,0,.5);flex:none}
+.d-r{background:#ff5f57}.d-y{background:#febc2e}.d-g{background:#28c840}
+.win-title{flex:1;font-size:19px;color:#eaf0ff;letter-spacing:1px;text-shadow:0 1px 2px #000;white-space:nowrap;overflow:hidden}
+.win-close{width:26px;height:22px;background:#ff5f57;border:2px solid #7a1f1c;color:#fff;
+  font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center}
+.win-close:hover{filter:brightness(1.2)}
+.win-body{padding:20px 22px;max-height:60vh;overflow:auto;font-size:20px;line-height:1.5}
+.win-body::-webkit-scrollbar{width:12px}
+.win-body::-webkit-scrollbar-track{background:#141b36}
+.win-body::-webkit-scrollbar-thumb{background:#4a5a8c;border:2px solid #141b36}
+h3.px{font-size:12px;color:var(--amber);margin-bottom:14px;line-height:1.8}
 
-    <!-- Your CSS -->
+/* about */
+.about-grid{display:flex;gap:18px;flex-wrap:wrap}
+.avatar{width:96px;height:96px;flex:none;background:repeating-conic-gradient(#2e3a5e 0 25%,#3d4c7d 0 50%);
+  background-size:24px 24px;border:3px solid var(--cyan);display:flex;align-items:center;justify-content:center;
+  font-family:'Press Start 2P';font-size:22px;color:#fff;text-shadow:2px 2px 0 #000}
+.facts{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.facts div{background:#141b36;border:2px solid #4a5a8c;padding:8px 10px;font-size:18px}
+.notes{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+.note{flex:1;min-width:150px;padding:12px;font-size:18px;color:#3a2f10;transform:rotate(-1.5deg);
+  box-shadow:3px 4px 8px rgba(0,0,0,.4);line-height:1.3}
+.note:nth-child(2){transform:rotate(1.5deg)} .note:nth-child(3){transform:rotate(-2deg)}
+.n-y{background:#ffe98a}.n-p{background:#ffb3d1}.n-b{background:#a8e6ff}
 
-    <link rel="stylesheet"
-          href="style.css">
+/* skills */
+.skill{margin-bottom:14px}
+.skill .s-top{display:flex;justify-content:space-between;font-size:19px;margin-bottom:5px}
+.skill .s-top b{color:var(--cyan);font-weight:normal}
+.s-bar{height:16px;background:#10162e;border:2px solid #4a5a8c;padding:2px}
+.s-fill{height:100%;width:0;background:repeating-linear-gradient(90deg,var(--green) 0 8px,#0f3 8px 12px);
+  box-shadow:0 0 8px var(--green);transition:width 1s cubic-bezier(.2,.8,.2,1)}
 
+/* projects */
+.proj{display:block;background:#141b36;border:2px solid #4a5a8c;padding:14px;margin-bottom:14px;
+  color:#dfe6ff;text-decoration:none;transition:.15s}
+.proj:hover,.proj:focus-visible{border-color:var(--cyan);transform:translate(-2px,-2px);box-shadow:4px 4px 0 rgba(94,231,255,.35)}
+.proj .p-name{font-family:'Press Start 2P';font-size:10px;color:var(--green);margin-bottom:8px}
+.proj p{font-size:18px;opacity:.85}
+.tags{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap}
+.tags span{font-size:15px;background:#2e3a5e;padding:2px 8px;border:1px solid #5a6ca3;color:#bcd0ff}
+
+/* contact */
+.field{margin-bottom:12px}
+.field label{display:block;font-size:17px;color:#9fb0e8;margin-bottom:4px}
+.field input,.field textarea{width:100%;background:#10162e;border:2px solid #4a5a8c;color:#eaf0ff;
+  font-family:inherit;font-size:19px;padding:8px 10px;outline:none}
+.field input:focus,.field textarea:focus{border-color:var(--cyan);box-shadow:0 0 8px rgba(94,231,255,.4)}
+.field input.err,.field textarea.err{border-color:#ff5f57}
+.field .errmsg{color:#ff8a84;font-size:15px;margin-top:4px;display:none}
+.field .errmsg.show{display:block}
+.retro-btn{background:var(--green);color:#03140a;border:0;font-family:'Press Start 2P';font-size:10px;
+  padding:12px 18px;box-shadow:4px 4px 0 #0a6e2e;transition:.1s}
+.retro-btn:hover{filter:brightness(1.1)}
+.retro-btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #0a6e2e}
+.retro-btn:disabled{opacity:.6;cursor:not-allowed}
+.socials{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+.socials a{color:var(--cyan);text-decoration:none;border:2px solid var(--cyan);padding:6px 12px;font-size:18px}
+.socials a:hover{background:rgba(94,231,255,.12)}
+#formMsg{color:var(--amber);margin-top:10px;font-size:18px;min-height:1.4em}
+
+/* ============ KEYBOARD + TASKBAR ============ */
+#kbd{position:absolute;bottom:44px;left:0;right:0;display:flex;justify-content:center;gap:8px;z-index:4;pointer-events:none}
+.key{background:linear-gradient(#f4f1e8,#c9c2b4);border:2px solid #8f8878;border-bottom-width:5px;border-radius:5px;
+  padding:6px 14px;font-family:'Press Start 2P';font-size:9px;color:#4a4438;box-shadow:0 4px 8px rgba(0,0,0,.4)}
+#taskbar{position:absolute;bottom:0;left:0;right:0;height:44px;background:var(--taskbar);
+  border-top:3px solid #2e3a5e;display:flex;align-items:center;gap:8px;padding:0 10px;z-index:30}
+#startBtn{background:linear-gradient(#3d4c7d,#2e3a5e);border:2px solid #5a6ca3;color:#fff;
+  font-family:'Press Start 2P';font-size:9px;padding:8px 12px;display:flex;align-items:center;gap:8px}
+#startBtn:hover{filter:brightness(1.2)}
+#taskBtns{display:flex;gap:6px;flex:1;overflow:hidden}
+.task-btn{background:#1b2440;border:2px solid #4a5a8c;color:#bcd0ff;font-size:17px;padding:4px 12px;
+  white-space:nowrap;overflow:hidden;max-width:180px;text-overflow:ellipsis}
+.task-btn:hover{border-color:var(--cyan)}
+.task-btn.active{border-color:var(--green);color:#eaffef}
+#clock{font-size:19px;color:#bcd0ff;padding:0 8px;text-shadow:0 1px 2px #000}
+#mug{position:absolute;right:26px;bottom:52px;font-size:44px;z-index:4;animation:steam 3s ease-in-out infinite}
+@keyframes steam{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+
+@media (max-width:720px){
+  .window{left:4vw!important;top:60px!important;width:92vw}
+  .facts{grid-template-columns:1fr}
+  #icons{top:56px;left:10px;gap:10px}
+  .icon{width:70px}.icon .emo{font-size:26px}.icon .lbl{font-size:14px}
+  #kbd{display:none}
+}
+</style>
+<base target="_blank">
 </head>
-
-
 <body>
+<div id="crt">
 
+  <!-- BOOT -->
+  <div id="boot" role="button" tabindex="0" aria-label="Boot screen, press any key or click to continue">
+    <div class="px">KHUSHI.OS v1.0.0</div>
+    <div id="bootLines" aria-hidden="true"></div>
+    <div id="barWrap" role="progressbar" aria-label="Loading" aria-valuemin="0" aria-valuemax="100"><div id="bar"></div></div>
+    <button id="bootHint" type="button">PRESS ANY KEY _</button>
+  </div>
 
-    <!-- =================================
-         LANDING PAGE
-    ================================= -->
+  <!-- TERMINAL -->
+  <div id="terminal" class="hidden">
+    <div id="termTop"><span>KHUSHI.OS v1.0.0</span><span id="termDate"></span></div>
+    <div id="monitor">
+      <div id="cat" aria-hidden="true">🐱<span class="zzz">z</span><span class="zzz">z</span></div>
+      <div id="screen">
+        <div class="px">GOOD IDEAS BUILD GREAT THINGS ♥</div>
+        <div id="termPath">user@khushi:~$ whoami</div>
+        <div id="typeArea"><span class="hi" id="t1"></span><span class="name" id="t2"></span><span class="role" id="t3"></span><span class="cursor" aria-hidden="true"></span></div>
+        <button id="enterBtn" class="hidden" type="button">[ ENTER MY DESK ]</button>
+      </div>
+    </div>
+    <button id="termHint" type="button">— CLICK THE SCREEN TO ENTER —</button>
+  </div>
 
-    <main class="landing-page">
+  <!-- DESKTOP -->
+  <div id="desktop" class="hidden">
+    <div id="sun" aria-hidden="true"></div>
+    <div id="skyline" aria-hidden="true"></div>
+    <div id="deskCat" aria-hidden="true">🐱💤</div>
 
-        <div class="greeting"
-             id="greeting-text">
+    <nav id="icons" aria-label="Portfolio sections">
+      <div class="icon" data-win="w-about" tabindex="0" role="button" aria-label="Open About Me"><span class="emo" aria-hidden="true">👤</span><span class="lbl">About Me</span></div>
+      <div class="icon" data-win="w-skills" tabindex="0" role="button" aria-label="Open Skills"><span class="emo" aria-hidden="true">💻</span><span class="lbl">Skills</span></div>
+      <div class="icon" data-win="w-experience" tabindex="0" role="button" aria-label="Open Experience"><span class="emo" aria-hidden="true">🏢</span><span class="lbl">Experience</span></div>
+      <div class="icon" data-win="w-projects" tabindex="0" role="button" aria-label="Open Projects"><span class="emo" aria-hidden="true">🚀</span><span class="lbl">Projects</span></div>
+      <div class="icon" data-win="w-contact" tabindex="0" role="button" aria-label="Open Contact form"><span class="emo" aria-hidden="true">✉️</span><span class="lbl">Contact</span></div>
+      <div class="icon" data-win="w-resume" tabindex="0" role="button" aria-label="Open Resume"><span class="emo" aria-hidden="true">📄</span><span class="lbl">Resume</span></div>
+    </nav>
+
+    <!-- ABOUT -->
+    <div class="window hidden" id="w-about" style="top:70px;left:160px" role="dialog" aria-label="About Me">
+      <div class="win-head"><span class="win-dot d-r" aria-hidden="true"></span><span class="win-dot d-y" aria-hidden="true"></span><span class="win-dot d-g" aria-hidden="true"></span>
+        <span class="win-title">about_me.txt — notepad</span><button class="win-close" type="button" aria-label="Close About Me">✕</button></div>
+      <div class="win-body">
+        <div class="about-grid">
+          <div class="avatar" aria-hidden="true">KT</div>
+          <div><h3 class="px">HI, I'M KHUSHI TIRKEY</h3>
+          <p>Software engineering student who builds across the stack — from low-level system design to deployment and measurement. I've built a distributed real-time perception pipeline across edge devices, an NLP system that matches developer profiles to job requirements, and shipped backend features in a production codebase, including code review and issue triage on a team.</p></div>
         </div>
-
-
-        <div class="name"
-             id="name-text">
+        <div class="facts">
+          <div> B.E. ECE, Final Year</div><div>🏫 CIT Coimbatore · CGPA 8.79</div>
+          <div>📚 320+ problems on LeetCode</div><div> Robotics Club, Joint Secretary</div>
         </div>
-
-
-        <button
-            class="know-btn"
-            id="know-btn"
-            type="button">
-
-            Know More
-
-        </button>
-
-    </main>
-
-
-
-    <!-- =================================
-         CUBE PAGE
-    ================================= -->
-
-    <section
-        class="cube-section"
-        id="cube-section">
-
-
-        <!-- Close -->
-
-        <button
-            class="close-cube"
-            id="close-cube"
-            type="button"
-            aria-label="Close cube">
-
-            ×
-
-        </button>
-
-
-        <!-- Heading -->
-
-        <div class="cube-header">
-
-            <span>02 / INTERACTIVE</span>
-
-            <h1>
-                Play with it.
-            </h1>
-
+        <div class="notes">
+          <div class="note n-y">DISCIPLINE CREATES FREEDOM ♥</div>
+          <div class="note n-p">YOU GOT THIS :)</div>
+          <div class="note n-b">GOOD IDEAS TAKE TIME</div>
         </div>
+      </div>
+    </div>
 
+    <!-- SKILLS -->
+    <div class="window hidden" id="w-skills" style="top:110px;left:210px" role="dialog" aria-label="Skills">
+      <div class="win-head"><span class="win-dot d-r" aria-hidden="true"></span><span class="win-dot d-y" aria-hidden="true"></span><span class="win-dot d-g" aria-hidden="true"></span>
+        <span class="win-title">skills.exe</span><button class="win-close" type="button" aria-label="Close Skills">✕</button></div>
+      <div class="win-body" id="skillsBody">
+        <h3 class="px">LOADING SKILL TREE...</h3>
+      </div>
+    </div>
 
-        <!-- Three.js will create
-             the cube here -->
-
-        <div
-            id="cube-container">
+    <!-- EXPERIENCE -->
+    <div class="window hidden" id="w-experience" style="top:100px;left:195px" role="dialog" aria-label="Experience">
+      <div class="win-head"><span class="win-dot d-r" aria-hidden="true"></span><span class="win-dot d-y" aria-hidden="true"></span><span class="win-dot d-g" aria-hidden="true"></span>
+        <span class="win-title">experience.log</span><button class="win-close" type="button" aria-label="Close Experience">✕</button></div>
+      <div class="win-body">
+        <h3 class="px">WHERE I'VE WORKED</h3>
+        <div class="proj">
+          <div class="p-name"> SOFTWARE ENGINEERING INTERN — CUBIKEY (REMOTE)</div>
+          <p style="opacity:.7;margin-bottom:8px">May 2025 – Oct 2025 · Bangalore</p>
+          <p>Designed, developed, tested, and containerized (Docker) an event-driven backend (Python/Flask) for automated order processing, and reviewed teammates' code for style, correctness, and efficiency as part of standard workflow.</p>
+          <p style="margin-top:8px">Debugged workflow issues in a live order-processing system, tracking root causes across service boundaries — orders processed without manual intervention rose to ~95% of total volume.</p>
+          <p style="margin-top:8px">Built reusable React (shadcn/ui) components and supported a Sanity CMS migration, improving maintainability and enabling localized regional deployments.</p>
         </div>
-
-
-        <!-- Cube moves -->
-
-        <div class="cube-controls">
-
-            <button type="button"
-                    data-move="F">
-                F
-            </button>
-
-            <button type="button"
-                    data-move="B">
-                B
-            </button>
-
-            <button type="button"
-                    data-move="R">
-                R
-            </button>
-
-            <button type="button"
-                    data-move="L">
-                L
-            </button>
-
-            <button type="button"
-                    data-move="U">
-                U
-            </button>
-
-            <button type="button"
-                    data-move="D">
-                D
-            </button>
-
+        <h3 class="px" style="margin-top:18px">ACHIEVEMENTS</h3>
+        <div class="facts" style="grid-template-columns:1fr">
+          <div>🏆 3rd place, HyperVerge SDE Hackathon (36-hour)</div>
+          <div>🚀 Led cross-functional teams across 15+ hackathons, shipping full-stack MVPs in 24–48 hour sprints</div>
         </div>
-
-
-        <!-- Actions -->
-
-        <div class="cube-actions">
-
-            <button
-                type="button"
-                id="scramble-btn">
-
-                Scramble
-
-            </button>
-
-
-            <button
-                type="button"
-                id="reset-btn">
-
-                Reset
-
-            </button>
-
+        <h3 class="px" style="margin-top:18px">LEADERSHIP &amp; CERTIFICATES</h3>
+        <div class="facts" style="grid-template-columns:1fr">
+          <div>🤖 Joint Secretary, Hyperbotics (Robotics Club)</div>
+          <div>️ Department Association Committee Member · School Pupil Leader</div>
+          <div>📜 Machine Learning Specialization (Coursera)</div>
+          <div>📜 Web Development (The Odin Project)</div>
         </div>
+      </div>
+    </div>
 
+    <!-- PROJECTS -->
+    <div class="window hidden" id="w-projects" style="top:90px;left:180px" role="dialog" aria-label="Projects">
+      <div class="win-head"><span class="win-dot d-r" aria-hidden="true"></span><span class="win-dot d-y" aria-hidden="true"></span><span class="win-dot d-g" aria-hidden="true"></span>
+        <span class="win-title">projects/ — file explorer</span><button class="win-close" type="button" aria-label="Close Projects">✕</button></div>
+      <div class="win-body">
+        <h3 class="px">THINGS I'VE BUILT</h3>
+        <a class="proj" href="https://github.com/KHUSHI423/match_portfolio" target="_blank" rel="noopener">
+          <div class="p-name"> DYNAMIC PORTFOLIO MAPPING</div>
+          <p>Candidates struggle to show recruiters how their scattered GitHub projects and work history map to a job's requirements. Built a microservices backend that aggregates a developer's GitHub projects, internships, and skills into one structured profile, then scores profile-to-job fit with an NLP/embedding similarity layer — plus an evaluation framework to catch hallucination and parsing errors before deployment.</p>
+          <div class="tags"><span>Python</span><span>FastAPI</span><span>Next.js</span><span>PostgreSQL</span><span>Docker</span><span>NLP / Embeddings</span></div></a>
+        <a class="proj" href="https://github.com/KHUSHI423" target="_blank" rel="noopener">
+          <div class="p-name">▸ VISION-BASED ROAD ANALYSIS &amp; TRAFFIC DETECTION</div>
+          <p style="opacity:.7;margin-bottom:6px">Hack to Impact 2026-27 — Semifinalist</p>
+          <p>Low-cost autonomous vehicles need real-time, low-latency perception. Built a vehicle/lane detection pipeline reaching 93% detection accuracy (IoU ≥ 0.5) at 36ms end-to-end latency per frame, then architected a distributed system across two edge devices over UDP — chosen over TCP to avoid retransmission latency in a real-time control loop — sustaining 28 FPS across 500 test frames for automated emergency braking.</p>
+          <div class="tags"><span>Python</span><span>YOLOv8</span><span>OpenCV</span><span>Raspberry Pi</span><span>ESP32</span><span>UDP</span></div></a>
+      </div>
+    </div>
 
-        <p class="cube-hint">
+    <!-- CONTACT -->
+    <div class="window hidden" id="w-contact" style="top:120px;left:230px" role="dialog" aria-label="Contact">
+      <div class="win-head"><span class="win-dot d-r" aria-hidden="true"></span><span class="win-dot d-y" aria-hidden="true"></span><span class="win-dot d-g" aria-hidden="true"></span>
+        <span class="win-title">contact_form.sh</span><button class="win-close" type="button" aria-label="Close Contact">✕</button></div>
+      <div class="win-body">
+        <h3 class="px">SEND ME A SIGNAL 📡</h3>
+        <form id="cform" novalidate>
+          <div class="field">
+            <label for="fName">&gt; your_name</label>
+            <input type="text" id="fName" required placeholder="Ada Lovelace">
+            <div class="errmsg" id="errName">Please enter your name.</div>
+          </div>
+          <div class="field">
+            <label for="fEmail">&gt; your_email</label>
+            <input type="email" id="fEmail" required placeholder="ada@example.com">
+            <div class="errmsg" id="errEmail">Please enter a valid email.</div>
+          </div>
+          <div class="field">
+            <label for="fMsg">&gt; message</label>
+            <textarea id="fMsg" rows="4" required placeholder="Let's build something great..."></textarea>
+            <div class="errmsg" id="errMsg">Please write a short message.</div>
+          </div>
+          <button class="retro-btn" type="submit" id="sendBtn">SEND →</button>
+          <div id="formMsg" role="status" aria-live="polite"></div>
+        </form>
+        <div class="socials">
+          <a href="https://github.com/KHUSHI423" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://www.linkedin.com/in/khushi" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://leetcode.com/u/khushi_Tirkey/" target="_blank" rel="noopener">LeetCode</a>
+        </div>
+      </div>
+    </div>
 
-            Drag to rotate •
-            Click a letter to turn a layer
+    <!-- RESUME -->
+    <div class="window hidden" id="w-resume" style="top:100px;left:200px" role="dialog" aria-label="Resume">
+      <div class="win-head"><span class="win-dot d-r" aria-hidden="true"></span><span class="win-dot d-y" aria-hidden="true"></span><span class="win-dot d-g" aria-hidden="true"></span>
+        <span class="win-title">resume.pdf — viewer</span><button class="win-close" type="button" aria-label="Close Resume">✕</button></div>
+      <div class="win-body">
+        <h3 class="px">KHUSHI TIRKEY — SOFTWARE ENGINEER</h3>
+        <p>🎓 B.E. Electronics &amp; Communication Engineering, Final Year — CIT Coimbatore (CGPA 8.79)<br>
+        💼 Software Engineering Intern, Cubikey (Remote) — May 2025 to Oct 2025<br>
+        📍 India · Open to internships &amp; full-time roles<br><br>
+        Full experience, projects, and achievements are on this resume — click below to download the PDF.</p>
+        <br><a class="retro-btn" id="resumeLink" href="#" style="display:inline-block;text-decoration:none">⬇ DOWNLOAD PDF</a>
+      </div>
+    </div>
 
-        </p>
+    <div id="mug" aria-hidden="true">☕</div>
+    <div id="kbd" aria-hidden="true">
+      <span class="key">BUILD</span><span class="key">LEARN</span><span class="key">SOLVE</span><span class="key">REPEAT</span>
+    </div>
+    <div id="taskbar">
+      <button id="startBtn" type="button"> KHUSHI</button>
+      <div id="taskBtns" role="tablist" aria-label="Open windows"></div>
+      <span id="clock"></span>
+    </div>
+  </div>
+</div>
 
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
 
-    </section>
+/* =========================================================
+   CONFIG
+   ========================================================= */
+const CONFIG = {
+  contactEmail: "khushitirkey423@gmail.com",
+  resumeUrl: "khushi-tirkey-resume.pdf"
+};
 
+/* ---------- AUDIO SYSTEM (Web Audio API - No external files needed) ---------- */
+let audioCtx = null;
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
 
+function playClickSound() {
+  try {
+    initAudio();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    
+    // Retro mechanical click: high freq burst + quick decay
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.05);
+    
+    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.08);
+  } catch(e) { /* silently fail if audio blocked */ }
+}
 
-    <!-- =================================
-         JAVASCRIPT
-    ================================= -->
+// Attach click sound to all interactive elements globally
+document.addEventListener('click', e => {
+  if (e.target.closest('button, .icon, .win-close, .proj, .retro-btn, #boot, #enterBtn, #termHint')) {
+    playClickSound();
+  }
+});
 
-    <!-- Three.js r160 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+/* ---------- BOOT SEQUENCE ---------- */
+const bootMsgs = [
+  "KHUSHI.OS BIOS v1.0.0 — checking memory .......... 640K OK",
+  "Detecting keyboard ............................... OK",
+  "Detecting coffee supply .......................... REFILLED",
+  "Loading kernel ................................... OK",
+  "Mounting /dev/creativity ......................... OK",
+  "Starting portfolio daemon ........................ OK",
+  "Welcome, Khushi."
+];
+const bl = $("#bootLines");
+bootMsgs.forEach((m,i)=>{
+  const d = document.createElement("div");
+  d.textContent = "> " + m;
+  d.style.animationDelay = (i*0.35)+"s";
+  bl.appendChild(d);
+});
+setTimeout(()=>{ $("#bar").style.transition="width 1.4s steps(24)"; $("#bar").style.width="100%"; $("#barWrap").setAttribute("aria-valuenow","100"); }, 600);
+setTimeout(()=>{ $("#bootHint").style.opacity="1"; }, 2300);
+const leaveBoot = ()=>{
+  if($("#boot").dataset.done) return;
+  $("#boot").dataset.done = "1";
+  $("#boot").style.transition="opacity .4s"; $("#boot").style.opacity="0";
+  setTimeout(()=>{ $("#boot").classList.add("hidden"); startTerminal(); }, 400);
+};
+document.addEventListener("keydown", leaveBoot);
+$("#boot").addEventListener("click", leaveBoot);
+$("#bootHint").addEventListener("click", e=>{ e.stopPropagation(); leaveBoot(); });
+setTimeout(leaveBoot, 3400); // auto-continue
 
-<!-- Your JavaScript -->
-<script src="script.js"></script>
+/* ---------- TERMINAL TYPING ---------- */
+function typeInto(el, text, speed, done){
+  let i=0;
+  (function tick(){
+    el.textContent = text.slice(0, ++i);
+    if(i<text.length) setTimeout(tick, speed);
+    else if(done) done();
+  })();
+}
+function startTerminal(){
+  $("#terminal").classList.remove("hidden");
+  const now = new Date();
+  $("#termDate").textContent = now.toDateString().slice(0,10).toUpperCase() + "  " +
+    now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  setTimeout(()=> typeInto($("#t1"), "Hi, I'm", 55, ()=>
+    typeInto($("#t2"), "Khushi Tirkey", 75, ()=>   // ✅ FIXED TYPO HERE
+      typeInto($("#t3"), "SOFTWARE DEVELOPER", 45, ()=>
+        $("#enterBtn").classList.remove("hidden")))), 400);
+}
+function enterDesk(){
+  $("#terminal").style.transition="opacity .45s"; $("#terminal").style.opacity="0";
+  setTimeout(()=>{
+    $("#terminal").classList.add("hidden");
+    $("#desktop").classList.remove("hidden");
+    buildSkyline(); startClock(); openWin("w-about");
+  }, 450);
+}
+$("#enterBtn").addEventListener("click", e=>{ e.stopPropagation(); enterDesk(); });
+$("#termHint").addEventListener("click", ()=>{ if(!$("#enterBtn").classList.contains("hidden")) enterDesk(); });
+$("#terminal").addEventListener("click", ()=>{ if(!$("#enterBtn").classList.contains("hidden")) enterDesk(); });
 
+/* ---------- SKYLINE ---------- */
+function buildSkyline(){
+  const sk = $("#skyline");
+  if(sk.children.length) return;
+  const hs=[38,64,50,86,58,42,96,70,48,80,56,40,66,90,52,44,74,60];
+  hs.forEach(h=>{ const b=document.createElement("div"); b.className="bld"; b.style.height=h+"px"; sk.appendChild(b); });
+}
 
+/* ---------- CLOCK ---------- */
+function startClock(){
+  const tick=()=>{ const n=new Date();
+    $("#clock").textContent = n.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); };
+  tick(); setInterval(tick, 10000);
+}
+
+/* ---------- WINDOW MANAGER ---------- */
+let zTop = 10;
+const winNames = {
+  "w-about":"👤 About Me", "w-skills":"💻 Skills", "w-experience":"🏢 Experience",
+  "w-projects":"🚀 Projects", "w-contact":"️ Contact", "w-resume":"📄 Resume"
+};
+function focusWin(w){
+  w.style.zIndex = ++zTop;
+  $$(".task-btn").forEach(b=>b.classList.remove("active"));
+  const tb = $("#tb-"+w.id); if(tb) tb.classList.add("active");
+}
+function openWin(id){
+  const w = $("#"+id); if(!w) return;
+  w.classList.remove("hidden"); focusWin(w);
+  if(window.innerWidth <= 720){ w.style.top="60px"; w.style.left="4vw"; }
+  if(!$("#tb-"+id)){
+    const b = document.createElement("button");
+    b.className="task-btn"; b.id="tb-"+id; b.type="button"; b.textContent=winNames[id];
+    b.setAttribute("role","tab");
+    b.onclick = ()=>{
+      if(!w.classList.contains("hidden") && b.classList.contains("active")){
+        w.classList.add("hidden"); b.classList.remove("active");
+      } else {
+        w.classList.remove("hidden"); focusWin(w);
+      }
+    };
+    $("#taskBtns").appendChild(b);
+  }
+  if(id==="w-skills") animateSkills();
+  const head = w.querySelector(".win-head");
+  if(head) head.setAttribute("tabindex","-1");
+}
+function closeWin(id){
+  $("#"+id).classList.add("hidden");
+  const tb=$("#tb-"+id); if(tb) tb.remove();
+}
+$$(".icon").forEach(ic=>{
+  ic.addEventListener("click", ()=> openWin(ic.dataset.win));
+  ic.addEventListener("keydown", e=>{
+    if(e.key==="Enter" || e.key===" "){ e.preventDefault(); openWin(ic.dataset.win); }
+  });
+});
+$$(".window").forEach(w=>{
+  w.addEventListener("pointerdown", ()=> focusWin(w));
+  w.querySelector(".win-close").addEventListener("click", e=>{ e.stopPropagation(); closeWin(w.id); });
+});
+
+/* close topmost window with Escape */
+document.addEventListener("keydown", e=>{
+  if(e.key !== "Escape") return;
+  let topWin=null, topZ=-1;
+  $$(".window").forEach(w=>{
+    if(!w.classList.contains("hidden") && +w.style.zIndex > topZ){ topZ = +w.style.zIndex; topWin = w; }
+  });
+  if(topWin) closeWin(topWin.id);
+});
+
+/* drag windows */
+$$(".window").forEach(w=>{
+  const head = w.querySelector(".win-head");
+  head.addEventListener("pointerdown", e=>{
+    if(e.target.closest(".win-close")) return;
+    focusWin(w);
+    head.setPointerCapture(e.pointerId);
+    const sx = e.clientX - w.offsetLeft, sy = e.clientY - w.offsetTop;
+    function mv(ev){
+      w.style.left = Math.max(0, Math.min(innerWidth-80, ev.clientX-sx))+"px";
+      w.style.top  = Math.max(0, Math.min(innerHeight-120, ev.clientY-sy))+"px";
+    }
+    function up(){
+      head.removeEventListener("pointermove", mv);
+      head.removeEventListener("pointerup", up);
+      head.removeEventListener("pointercancel", up);
+    }
+    head.addEventListener("pointermove", mv);
+    head.addEventListener("pointerup", up);
+    head.addEventListener("pointercancel", up);
+  });
+});
+
+/* ---------- SKILLS ---------- */
+const skills = [
+  ["Python", 92], ["Data Structures & Algorithms", 88], ["Flask / FastAPI", 85],
+  ["SQL / PostgreSQL", 78], ["Docker & Git", 80], ["YOLOv8 / OpenCV", 75], ["C", 70]
+];
+let skillsBuilt=false;
+function animateSkills(){
+  const body = $("#skillsBody");
+  if(!skillsBuilt){
+    body.innerHTML = "<h3 class='px'>SKILL TREE</h3>" + skills.map(s=>
+      "<div class='skill'><div class='s-top'><span>"+s[0]+"</span><b>"+s[1]+"%</b></div>"+
+      "<div class='s-bar' role='progressbar' aria-label='"+s[0]+"' aria-valuenow='"+s[1]+"' aria-valuemin='0' aria-valuemax='100'><div class='s-fill' data-w='"+s[1]+"'></div></div></div>").join("") +
+      "<div class='notes' style='margin-top:6px'><div class='note n-b'>Currently learning: System Design &amp; LLD</div></div>";
+    skillsBuilt = true;
+  }
+  requestAnimationFrame(()=> setTimeout(()=>{
+    $$(".s-fill").forEach(f=> f.style.width = f.dataset.w+"%");
+  }, 60));
+}
+
+/* ---------- START BUTTON ---------- */
+$("#startBtn").addEventListener("click", ()=> openWin("w-about"));
+
+/* ---------- RESUME LINK ---------- */
+$("#resumeLink").addEventListener("click", e=>{
+  e.preventDefault();
+  if(CONFIG.resumeUrl){
+    window.open(CONFIG.resumeUrl, "_blank", "noopener");
+  } else {
+    alert("Add your resume PDF link in CONFIG.resumeUrl to enable this button.");
+  }
+});
+
+/* ---------- CONTACT FORM ---------- */
+function setFieldError(input, errEl, hasError){
+  input.classList.toggle("err", hasError);
+  errEl.classList.toggle("show", hasError);
+  input.setAttribute("aria-invalid", hasError ? "true" : "false");
+}
+$("#cform").addEventListener("submit", e=>{
+  e.preventDefault();
+  const nameEl = $("#fName"), emailEl = $("#fEmail"), msgEl = $("#fMsg");
+  const name = nameEl.value.trim(), email = emailEl.value.trim(), msg = msgEl.value.trim();
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  setFieldError(nameEl, $("#errName"), !name);
+  setFieldError(emailEl, $("#errEmail"), !emailOk);
+  setFieldError(msgEl, $("#errMsg"), !msg);
+
+  if(!name || !emailOk || !msg){
+    $("#formMsg").textContent = "> please fix the highlighted fields";
+    return;
+  }
+
+  const sendBtn = $("#sendBtn");
+  sendBtn.disabled = true;
+  const subject = encodeURIComponent("Portfolio message from " + name);
+  const bodyTxt = encodeURIComponent(msg + "\n\n— " + name + " (" + email + ")");
+  $("#formMsg").textContent = "> opening your email client...";
+  window.location.href = "mailto:" + CONFIG.contactEmail + "?subject=" + subject + "&body=" + bodyTxt;
+
+  setTimeout(()=>{
+    $("#formMsg").textContent = "> if your email app opened, hit send there — or reach me directly at " + CONFIG.contactEmail;
+    sendBtn.disabled = false;
+  }, 1200);
+});
+[["fName","errName"],["fEmail","errEmail"],["fMsg","errMsg"]].forEach(([inputId,errId])=>{
+  $("#"+inputId).addEventListener("input", ()=> setFieldError($("#"+inputId), $("#"+errId), false));
+});
+</script>
 </body>
-
 </html>
